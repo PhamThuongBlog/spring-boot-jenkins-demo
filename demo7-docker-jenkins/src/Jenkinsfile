@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-username/spring-boot-jenkins-demo.git'
+            }
+        }
+        stage('Build with Maven') {
+            steps {
+                sh './mvnw clean package -DskipTests'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t spring-boot-demo .'
+            }
+        }
+        stage('Run Container') {
+            steps {
+                sh 'docker run -d -p 8080:8080 --name spring-demo spring-boot-demo'
+            }
+        }
+    }
+}
